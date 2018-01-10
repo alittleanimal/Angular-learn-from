@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Address, Hero } from '../data-model';
 
 @Component({
   selector: 'app-hero-detail3',
@@ -9,7 +10,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 
 
-export class HeroDetail3Component implements OnInit {
+export class HeroDetail3Component implements OnInit, OnChanges {
+
+  @Input() hero: Hero;
 
   states = ['CA', 'MD', 'OH', 'VA'];
 
@@ -25,12 +28,17 @@ export class HeroDetail3Component implements OnInit {
   createForm() {
     this.heroFrom = this.fb.group({
       name: ['', Validators.required],
-      street: '',
-      city: '',
-      state: '',
-      zip: '',
+      address: this.fb.group(new Address()),
       power: '',
       sidekick: ''
     });
+  }
+
+  ngOnChanges() {
+    this.heroFrom.reset({
+      name: this.hero.name,
+      address: this.hero.addresses[0] || new Address()
+    });
+    
   }
 }
