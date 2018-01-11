@@ -1,5 +1,5 @@
 import { Component, OnInit, OnChanges, Input } from '@angular/core';
-import { Hero, Address } from '../data-model';
+import { Hero, Address, heroes } from '../data-model';
 import { FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms'
 
 @Component({
@@ -9,13 +9,16 @@ import { FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms'
 })
 export class HeroDetail4Component implements OnInit, OnChanges {
 
-  @Input() hero: Hero;
+  heros: Hero[] = heroes;
+  hero = heroes[0];
 
   heroForm: FormGroup;
   states = ['CA', 'MD', 'OH', 'VA'];
 
   constructor(private fb: FormBuilder) {
-
+    this.createForm();
+    this.logNameChange();
+    this.addData();
   }
 
   createForm() {
@@ -33,6 +36,13 @@ export class HeroDetail4Component implements OnInit, OnChanges {
   }
   
   ngOnChanges() {
+    this.heroForm.reset({
+      name: this.hero.name
+    });
+    this.setAddresses(this.hero.addresses);
+  }
+
+  addData() {
     this.heroForm.reset({
       name: this.hero.name
     });
